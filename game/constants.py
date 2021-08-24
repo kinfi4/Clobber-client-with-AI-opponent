@@ -14,6 +14,7 @@ class Color:
     WHITE = (245, 245, 245)
     A_BIT_YELLOW_WHITE = (233, 233, 233)
     CHOSEN_WHITE = (245, 180, 180)
+    LIGHT_RED = (250, 97, 87)
 
 
 class CheckerType(Enum):
