@@ -1,4 +1,5 @@
 import math
+from time import sleep
 
 import pygame as pg
 
@@ -75,7 +76,6 @@ class Board:
         except MouseOutOfBoard:
             return False
 
-        print(self.chosen_cell, x_final, y_final)
         return (x_final, y_final) == self.chosen_cell
 
     def unchoose_cell(self):
@@ -100,6 +100,23 @@ class Board:
                         return False
 
         return True
+
+    def show_that_move_is_impossible(self, mouse_position):
+        try:
+            x_final, y_final = self.drawer.mouse_coordinates_to_cell_index(mouse_position)
+        except MouseOutOfBoard:
+            return
+
+        initial_color = const.Color.A_BIT_YELLOW_WHITE if (y_final + x_final) % 2 == 0 else const.Color.LIGHTER_BLACK
+        self.drawer.draw_cell_by_index(const.Color.LIGHT_RED, (x_final, y_final))
+        self.drawer.draw_checker_by_index((x_final, y_final), self.board_matrix[y_final][x_final])
+        pg.display.update()
+
+        sleep(0.2)
+
+        self.drawer.draw_cell_by_index(initial_color, (x_final, y_final))
+        self.drawer.draw_checker_by_index((x_final, y_final), self.board_matrix[y_final][x_final])
+        pg.display.update()
 
     def _cell_can_make_move(self, x, y):
         checker_type = self.board_matrix[y][x]

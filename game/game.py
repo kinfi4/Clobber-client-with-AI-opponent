@@ -6,7 +6,11 @@ import pygame as pg
 import constants as const
 from board import Board
 
+pg.mixer.pre_init(22100, -16, 2, 64)
 pg.init()
+
+s = pg.mixer.Sound('media/sounds/forbidden-sound.wav')
+s.set_volume(0.1)
 
 
 class GameController:
@@ -47,6 +51,9 @@ class GameController:
             elif self.cell_chosen and self.board.mouse_on_chosen_cell(pg.mouse.get_pos()):
                 self.cell_chosen = False
                 self.board.toggle_choose_cell(pg.mouse.get_pos())
+            else:
+                self.board.show_that_move_is_impossible(pg.mouse.get_pos())
+                s.play(0, 0, fade_ms=5)
 
     def main_loop(self):
         self.board.init_table()
