@@ -1,10 +1,10 @@
 import math
-from time import sleep
 
 import pygame as pg
 
 import constants as const
 from board import Board
+from agent import Agent
 
 pg.mixer.pre_init(22100, -16, 2, 64)
 pg.init()
@@ -27,6 +27,8 @@ class GameController:
         pg.display.set_caption('Clobber')
         pg.display.set_icon(pg.image.load('./media/icon.gif'))
 
+        self.agent = Agent()
+
     def check_mouse_click(self):
         if pg.mouse.get_pressed(3)[0]:
             rel = pg.mouse.get_rel()
@@ -37,17 +39,18 @@ class GameController:
             if not self.cell_chosen and self.board.cell_can_be_chosen(mouse_pos, self.current_player_move):
                 self.cell_chosen = True
                 self.board.toggle_choose_cell(mouse_pos)
-            elif self.cell_chosen and self.board.can_make_move(pg.mouse.get_pos()):
-                self.board.make_move(pg.mouse.get_pos())
+            elif self._human_trying_to_move():
+                self.board.human_make_move(pg.mouse.get_pos())
                 self.board.unchoose_cell()
-                self.current_player_move = const.CheckerType.WHITE \
-                    if self.current_player_move == const.CheckerType.BLACK else const.CheckerType.BLACK
+                self.current_player_move = const.CheckerType.BLACK
                 self.cell_chosen = False
+                pg.display.update()
 
-                if self.board.game_is_over(self.current_player_move):
+                if self.board.game_is_over():
                     self._draw_game_over()
                     input()
 
+                self._computer_make_move()
             elif self.cell_chosen and self.board.mouse_on_chosen_cell(pg.mouse.get_pos()):
                 self.cell_chosen = False
                 self.board.toggle_choose_cell(pg.mouse.get_pos())
@@ -56,7 +59,7 @@ class GameController:
                 s.play(0, 0, fade_ms=5)
 
     def main_loop(self):
-        self.board.init_table()
+        self.board.draw_the_board()
 
         while True:
             for event in pg.event.get():
@@ -83,6 +86,16 @@ class GameController:
         self.screen.blit(game_over_text, pos_game_over)
         self.screen.blit(winning_text, pos_winner_text)
         pg.display.update()
+
+    def _computer_make_move(self):
+        _, new_board = self.agent.minimax(self.board, 3, const.CheckerType.BLACK, float('-inf'), float('inf'))
+        self.board = new_board
+        self.board.draw_the_board()
+        self.current_player_move = const.CheckerType.WHITE
+
+    def _human_trying_to_move(self):
+        return self.cell_chosen and self.board.human_can_make_move(pg.mouse.get_pos()) \
+               and self.current_player_move == const.CheckerType.WHITE
 
 
 if __name__ == '__main__':

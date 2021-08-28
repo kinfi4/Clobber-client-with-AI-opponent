@@ -16,20 +16,20 @@ class Drawer:
         self.board_size = None
         self.cell_size = None
 
-    def draw_board(self):
+    def draw_board(self, board_matrix):
         self._draw_borders()
 
         screen_size = self.screen.get_size()[0]
         self.board_size = screen_size - 2 * self.BOARD_MARGIN_TB
         self.cell_size = self.board_size / 6
 
-        for i in range(6):  # to draw each row
-            for k in range(5):  # to draw each column
-                color = const.Color.A_BIT_YELLOW_WHITE if (i + k) % 2 == 0 else const.Color.LIGHTER_BLACK
-                self.draw_cell_by_index(color, (k, i))
+        for y in range(len(board_matrix)):  # to draw each row
+            for x in range(len(board_matrix[0])):  # to draw each column
+                color = const.Color.A_BIT_YELLOW_WHITE if (x + y) % 2 == 0 else const.Color.LIGHTER_BLACK
+                self.draw_cell_by_index(color, (x, y))
 
-                checker_type = const.CheckerType.WHITE if (i + k) % 2 == 0 else const.CheckerType.BLACK
-                self.draw_checker_by_index((k, i), checker_type)
+                checker_type = board_matrix[y][x]
+                self.draw_checker_by_index((x, y), checker_type)
 
     def draw_checker_by_index(self, pos, checker_type):
         x, y = self.BOARD_MARGIN_RL + pos[0] * self.cell_size, self.BOARD_MARGIN_TB + pos[1] * self.cell_size
