@@ -106,7 +106,7 @@ class Board:
         return self.board_matrix[y_final][x_final] == color_making_move
 
     def game_is_over(self):
-        for x, y in self.get_all_cells(CheckerType.WHITE):  # it doesnt matter what color to use,
+        for x, y in self.get_all_cells(CheckerType.WHITE):  # it doesn't matter what color to use,
             if not self.cell_is_dead(x, y):        # if there is a move for white there will for black as well
                 return False
 
@@ -155,7 +155,7 @@ class Board:
     def cell_is_dead(self, x, y):
         return len(self.get_valid_moves(x, y)) == 0
 
-    def evaluate_board(self):
+    def evaluate_board(self) -> int:
         n_of_white, n_of_black = 0, 0
 
         for y in range(len(self.board_matrix)):

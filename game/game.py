@@ -51,6 +51,10 @@ class GameController:
                     input()
 
                 self._computer_make_move()
+
+                if self.board.game_is_over():
+                    self._draw_game_over()
+                    input()
             elif self.cell_chosen and self.board.mouse_on_chosen_cell(pg.mouse.get_pos()):
                 self.cell_chosen = False
                 self.board.toggle_choose_cell(pg.mouse.get_pos())
@@ -88,6 +92,7 @@ class GameController:
         pg.display.update()
 
     def _computer_make_move(self):
+        # _, new_board = self.agent.simple_minimax(self.board, 3, const.CheckerType.BLACK)
         _, new_board = self.agent.minimax(self.board, 3, const.CheckerType.BLACK, float('-inf'), float('inf'))
         self.board = new_board
         self.board.draw_the_board()

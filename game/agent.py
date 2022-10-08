@@ -7,6 +7,34 @@ class Agent:
     def __init__(self, difficulty='low'):
         self.difficulty = difficulty
 
+    def simple_minimax(self, board, depth, color_making_move):
+        if depth == 0 or board.game_is_over():
+            return board.evaluate_board(), board
+
+        best_board = None
+
+        if color_making_move == CheckerType.WHITE:
+            max_eval = float('-inf')
+            for new_board in self.get_all_moves(board, color_making_move):
+                evaluation, _ = self.simple_minimax(new_board, depth - 1, CheckerType.BLACK)
+
+                if evaluation > max_eval:
+                    max_eval = evaluation
+                    best_board = new_board
+
+            return max_eval, best_board
+
+        else:
+            min_eval = float('inf')
+            for new_board in self.get_all_moves(board, color_making_move):
+                evaluation, _ = self.simple_minimax(new_board, depth - 1, CheckerType.WHITE)
+
+                if evaluation < min_eval:
+                    min_eval = evaluation
+                    best_board = new_board
+
+            return min_eval, best_board
+
     def minimax(self, board, depth, color_making_move, i_alpha, i_beta):
         if depth == 0 or board.game_is_over():
             return board.evaluate_board(), board
