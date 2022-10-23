@@ -93,7 +93,12 @@ class GameController:
 
     def _computer_make_move(self):
         # _, new_board = self.agent.simple_minimax(self.board, 3, const.CheckerType.BLACK)
-        _, new_board = self.agent.minimax(self.board, 3, const.CheckerType.BLACK, float('-inf'), float('inf'))
+        # _, new_board = self.agent.minimax(self.board, 3, const.CheckerType.BLACK, float('-inf'), float('inf'))
+
+        # _, new_board = self.agent.negamax(self.board, 3, const.CheckerType.BLACK, float('-inf'), float('inf'))
+        # _, new_board = self.agent.nega_scout(self.board, 3, const.CheckerType.BLACK, float('-inf'), float('inf'))
+        _, new_board = self.agent.plain_negamax(self.board, 3, const.CheckerType.BLACK)
+
         self.board = new_board
         self.board.draw_the_board()
         self.current_player_move = const.CheckerType.WHITE
